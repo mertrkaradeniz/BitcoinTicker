@@ -1,4 +1,4 @@
-package com.mertrizakaradeniz.bitcointicker
+package com.mertrizakaradeniz.bitcointicker.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.mertrizakaradeniz.bitcointicker.R
 import com.mertrizakaradeniz.bitcointicker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

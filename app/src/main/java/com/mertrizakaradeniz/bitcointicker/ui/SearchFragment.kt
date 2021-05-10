@@ -1,22 +1,22 @@
-package com.mertrizakaradeniz.bitcointicker
+package com.mertrizakaradeniz.bitcointicker.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mertrizakaradeniz.bitcointicker.databinding.FragmentCoinDetailBinding
+import com.mertrizakaradeniz.bitcointicker.databinding.FragmentSearchBinding
 
-class CoinDetailFragment : Fragment() {
+class SearchFragment : Fragment() {
 
-    private var _binding: FragmentCoinDetailBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCoinDetailBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
