@@ -3,16 +3,14 @@ package com.mertrizakaradeniz.bitcointicker.ui.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.mertrizakaradeniz.bitcointicker.R
 import com.mertrizakaradeniz.bitcointicker.databinding.ActivityMainBinding
-import com.mertrizakaradeniz.bitcointicker.ui.fragments.list.CoinListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,8 +36,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController)
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.coinsFragment,
@@ -47,6 +43,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.favouriteCoinsFragment
             )
         )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.bottomNavigationView.setupWithNavController(navController)
     }
 
     private fun handleDisplayHomeAsUp() {

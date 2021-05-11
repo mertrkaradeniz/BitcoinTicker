@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/coinsFragment"
         android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.list.CoinListFragment"
-        android:label="fragment_coins"
+        android:label="Coins"
         tools:layout="@layout/fragment_coin_list" >
         <action
             android:id="@+id/action_coinsFragment_to_coinDetailFragment"
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/favouriteCoinsFragment"
         android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.favourite.FavouriteCoinsFragment"
-        android:label="fragment_favourite_coins"
+        android:label="Favourite Coins"
         tools:layout="@layout/fragment_favourite_coins" >
         <action
             android:id="@+id/action_favouriteCoinsFragment_to_coinDetailFragment"
@@ -26,6 +26,13 @@
     <fragment
         android:id="@+id/coinDetailFragment"
         android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.detail.CoinDetailFragment"
-        android:label="fragment_coin_detail"
-        tools:layout="@layout/fragment_coin_detail" />
+        android:label="Coin detail"
+        tools:layout="@layout/fragment_coin_detail" >
+        <argument
+            android:name="Coin"
+            app:argType="com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin" />
+        <argument
+            android:name="fromFavoriteCoinsFragment"
+            app:argType="boolean" />
+    </fragment>
 </navigation>

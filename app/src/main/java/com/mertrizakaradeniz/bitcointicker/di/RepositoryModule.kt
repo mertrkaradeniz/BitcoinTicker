@@ -22,7 +22,7 @@ object RepositoryModule {
         coinApi: CoinApi,
         coinDao: CoinDao,
         firebaseAuthRepository: FirebaseAuthRepository
-    ): CoinRepository = CoinRepository(coinApi, coinDao, firebaseAuthRepository)
+    ): CoinRepository = CoinRepository(coinApi, coinDao)
 
     @Singleton
     @Provides

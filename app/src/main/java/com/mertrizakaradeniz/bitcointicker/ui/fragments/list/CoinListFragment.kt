@@ -1,14 +1,14 @@
 package com.mertrizakaradeniz.bitcointicker.ui.fragments.list
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mertrizakaradeniz.bitcointicker.R
 import com.mertrizakaradeniz.bitcointicker.adapters.CoinListAdapter
@@ -23,9 +23,8 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
 
     private var _binding: FragmentCoinListBinding? = null
     private val binding get() = _binding!!
-    private val TAG = "CoinListFragment"
 
-    private val viewModel: CoinListViewModel by viewModels<CoinListViewModel>()
+    private val viewModel: CoinListViewModel by viewModels()
 
     private lateinit var coinListData: List<Coin>
     private lateinit var coinListAdapter: CoinListAdapter
@@ -42,22 +41,19 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
         setupRecyclerView()
-
-        viewModel.getCoinList(requireContext())
+        setupSearchView()
+        viewModel.fetchCoinList(requireContext())
     }
 
     private fun setupObservers() {
 
         viewModel.coinList.observe(viewLifecycleOwner, { response ->
-            when(response) {
+            when (response) {
                 is Resource.Success -> {
                     (requireActivity() as MainActivity).hideProgressBar()
                     coinListData = response.data!!
                     coinListAdapter.differ.submitList(coinListData)
-                    /*
-                    recyclerView.scheduleLayoutAnimation()
-                    mainViewModel.insertCoinList(coinListData)
-                    */
+                    viewModel.insertCoinList(coinListData)
                 }
                 is Resource.Error -> {
                     (requireActivity() as MainActivity).hideProgressBar()
@@ -66,13 +62,34 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
                         .setCancelable(false)
                         .setPositiveButton("Try Again") { dialog, _ ->
                             dialog.dismiss()
-                            viewModel.getCoinList(requireContext())
+                            viewModel.fetchCoinList(requireContext())
                         }.show()
                     /*
                     response.message?.let { message ->
                         Toast.makeText(activity, "An Error occurred: $message", Toast.LENGTH_LONG).show()
                     }
                     */
+                }
+                is Resource.Loading -> {
+                    (requireActivity() as MainActivity).showProgressBar()
+                }
+            }
+        })
+
+        viewModel.filteredCoinList.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is Resource.Success -> {
+                    (requireActivity() as MainActivity).hideProgressBar()
+                    coinListAdapter.differ.submitList(response.data)
+                }
+                is Resource.Error -> {
+                    (requireActivity() as MainActivity).hideProgressBar()
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(response.message)
+                        .setCancelable(false)
+                        .setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }.show()
                 }
                 is Resource.Loading -> {
                     (requireActivity() as MainActivity).showProgressBar()
@@ -87,6 +104,30 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
             adapter = coinListAdapter
             layoutManager = LinearLayoutManager(activity)
         }
+        coinListAdapter.setOnItemClickListener { coin ->
+            CoinListFragmentDirections.actionCoinsFragmentToCoinDetailFragment(coin,false).also { action ->
+                findNavController().navigate(action)
+            }
+        }
+    }
+
+    private fun setupSearchView() {
+        binding.svCoins.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null && query != "") {
+                    viewModel.filterCoinList(query)
+                }
+                binding.svCoins.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query == "") {
+                    coinListAdapter.differ.submitList(coinListData)
+                }
+                return true
+            }
+        })
     }
 
     override fun onDestroyView() {

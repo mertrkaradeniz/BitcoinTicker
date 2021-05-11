@@ -18,26 +18,50 @@ import javax.inject.Inject
 @HiltViewModel
 class CoinListViewModel @Inject constructor(
     private val coinRepository: CoinRepository
-): ViewModel() {
+) : ViewModel() {
 
-    private val _coinList:MutableLiveData<Resource<List<Coin>>> = MutableLiveData()
+    private val _coinList: MutableLiveData<Resource<List<Coin>>> = MutableLiveData()
     val coinList: LiveData<Resource<List<Coin>>> = _coinList
 
-    fun getCoinList(context: Context) = viewModelScope.launch {
-        safeCoinListCall(context)
+    private val _filteredCoinList: MutableLiveData<Resource<List<Coin>>> = MutableLiveData()
+    val filteredCoinList: LiveData<Resource<List<Coin>>> = _filteredCoinList
+
+    fun fetchCoinList(context: Context) = viewModelScope.launch {
+        safeFetchCoinListCall(context)
     }
 
-    private suspend fun safeCoinListCall(context: Context) {
+    fun insertCoinList(coinList: List<Coin>) = viewModelScope.launch {
+        coinRepository.insertCoinList(coinList)
+    }
+
+    fun filterCoinList(query: String) = viewModelScope.launch {
+        filterCoinListCall(query)
+    }
+
+    private suspend fun filterCoinListCall(query: String) {
+        _filteredCoinList.postValue(Resource.Loading())
+        try {
+            val result = coinRepository.getCoinList(query)
+            if (result.isNotEmpty())
+                _filteredCoinList.postValue(Resource.Success(result))
+            else
+                _filteredCoinList.postValue(Resource.Error("Coins not found"))
+        } catch (t: Throwable) {
+            _filteredCoinList.postValue(Resource.Error("An error occurred, please try again: ${t.message}"))
+        }
+    }
+
+    private suspend fun safeFetchCoinListCall(context: Context) {
         _coinList.postValue(Resource.Loading())
         try {
             if (Utils.hasInternetConnection(context)) {
-                val response = coinRepository.getCoinList()
+                val response = coinRepository.fetchCoinList()
                 _coinList.postValue(handleCoinListResponse(response))
             } else {
                 _coinList.postValue(Resource.Error("No internet connection", emptyList()))
             }
         } catch (t: Throwable) {
-            when(t) {
+            when (t) {
                 is IOException -> _coinList.postValue(Resource.Error("Network Failure"))
                 else -> _coinList.postValue(Resource.Error("An error occurred, please try again"))
             }
@@ -50,12 +74,9 @@ class CoinListViewModel @Inject constructor(
                 return Resource.Success(it)
             }
         } else {
-            response.errorBody()?.let {
-                return Resource.Error(response.message())
-            }
+            return Resource.Error(response.message())
         }
         return Resource.Error("An error occurred, please try again")
     }
-
 
 }

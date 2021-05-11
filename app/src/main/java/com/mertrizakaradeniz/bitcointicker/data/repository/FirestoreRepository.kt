@@ -2,21 +2,28 @@ package com.mertrizakaradeniz.bitcointicker.data.repository
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mertrizakaradeniz.bitcointicker.data.models.coin.FavouriteCoin
 import com.mertrizakaradeniz.bitcointicker.utils.Resource
+import javax.inject.Inject
 
-class FirestoreRepository(
+class FirestoreRepository @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth,
-    private val coinRepository: CoinRepository
+    private val firebaseAuth: FirebaseAuth
 ) {
-    private val favourites = "Favourites"
-    private val coins = "Coins"
+    private val favourites = "favoriteCoins"
+    private val users = "users"
 
-    private fun getCurrentUserId(): String? = firebaseAuth.currentUser?.uid
-/*
-    fun addFavouriteCoin(favouriteCoin: FavouriteCoin, onResult: (Resource<Task<Void>>) -> Unit) {
+    fun getCurrentUserId(): String? = firebaseAuth.currentUser?.uid
+
+    suspend fun favoriteCoinsCollection(): CollectionReference {
+        val currentUserId = getCurrentUserId()
+        return firestore.collection(users).document(currentUserId!!)
+            .collection(favourites)
+    }
+
+    /*fun addFavouriteCoin(favouriteCoin: FavouriteCoin, onResult: (Resource<Task<Void>>) -> Unit) {
         onResult(Resource.Loading())
         getCurrentUserId().also { uid ->
             if (uid == null) {
@@ -30,9 +37,9 @@ class FirestoreRepository(
                 .document(favouriteCoin.id)
                 .set(
                     mapOf(
-                        FirestoreConst.FavouriteCoin.id to favouriteCoin.id,
-                        FirestoreConst.FavouriteCoin.name to favouriteCoin.name,
-                        FirestoreConst.FavouriteCoin.symbol to favouriteCoin.symbol
+                        "id" to favouriteCoin.id,
+                        "name" to favouriteCoin.name,
+                        "symbol" to favouriteCoin.symbol
                     )
                 )
                 .addOnCompleteListener { task ->
@@ -99,4 +106,4 @@ class FirestoreRepository(
                     }
                 }
         }*/
-    }
+}
