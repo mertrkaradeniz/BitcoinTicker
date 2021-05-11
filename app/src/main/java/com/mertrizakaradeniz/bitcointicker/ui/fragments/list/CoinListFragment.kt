@@ -1,6 +1,7 @@
 package com.mertrizakaradeniz.bitcointicker.ui.fragments.list
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -42,7 +43,16 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
         setupObservers()
         setupRecyclerView()
         setupSearchView()
+
         viewModel.fetchCoinList(requireContext())
+
+        coinListAdapter.setOnItemClickListener { coin ->
+            val bundle = Bundle().apply {
+                putSerializable("coin", coin)
+                putBoolean("fromFavouriteCoinsFragment", false)
+            }
+            findNavController().navigate(R.id.action_coinsFragment_to_coinDetailFragment,bundle)
+        }
     }
 
     private fun setupObservers() {
@@ -103,11 +113,6 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
         binding.rvCoins.apply {
             adapter = coinListAdapter
             layoutManager = LinearLayoutManager(activity)
-        }
-        coinListAdapter.setOnItemClickListener { coin ->
-            CoinListFragmentDirections.actionCoinsFragmentToCoinDetailFragment(coin,false).also { action ->
-                findNavController().navigate(action)
-            }
         }
     }
 

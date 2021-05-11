@@ -12,22 +12,24 @@ import com.mertrizakaradeniz.bitcointicker.data.repository.FirebaseAuthRepositor
 import com.mertrizakaradeniz.bitcointicker.data.repository.FirestoreRepository
 import com.mertrizakaradeniz.bitcointicker.utils.Resource
 import com.mertrizakaradeniz.bitcointicker.utils.Utils
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
+@HiltViewModel
 class CoinDetailViewModel @Inject constructor(
     private val coinRepository: CoinRepository,
     private val firestoreRepository: FirestoreRepository,
     private val firebaseAuthRepository: FirebaseAuthRepository
 ): ViewModel() {
 
-    private val _coinDetailList: MutableLiveData<Resource<CoinDetail>> = MutableLiveData()
-    val coinDetailList: LiveData<Resource<CoinDetail>> = _coinDetailList
+    private val _coinDetail: MutableLiveData<Resource<CoinDetail>> = MutableLiveData()
+    val coinDetail: LiveData<Resource<CoinDetail>> = _coinDetail
 
     private val _favouriteCoinList: MutableLiveData<Resource<CoinDetail>> = MutableLiveData()
-    val favouriteCoinList: LiveData<Resource<CoinDetail>> = _coinDetailList
+    val favouriteCoinList: LiveData<Resource<CoinDetail>> = _coinDetail
 
     fun fetchCoinDetail(context: Context, id: String) = viewModelScope.launch {
         safeFetchCoinDetailCall(context, id)
@@ -52,20 +54,20 @@ class CoinDetailViewModel @Inject constructor(
     }
 
     private suspend fun safeFetchCoinDetailCall(context: Context, id: String) {
-        _coinDetailList.postValue(Resource.Loading())
+        _coinDetail.postValue(Resource.Loading())
         try {
             if (Utils.hasInternetConnection(context)) {
                 val response = coinRepository.fetchCoinDetail(id)
-                _coinDetailList.postValue(handleCoinDetailResponse(response))
+                _coinDetail.postValue(handleCoinDetailResponse(response))
             } else {
-                _coinDetailList.postValue(Resource.Error("No internet connection"))
+                _coinDetail.postValue(Resource.Error("No internet connection"))
             }
         } catch (t: Throwable) {
             when (t) {
                 is IOException ->
-                    _coinDetailList.postValue(Resource.Error("Network error"))
+                    _coinDetail.postValue(Resource.Error("Network error"))
                 else ->
-                    _coinDetailList.postValue(
+                    _coinDetail.postValue(
                         Resource.Error("An error occurred, please try again")
                     )
             }
