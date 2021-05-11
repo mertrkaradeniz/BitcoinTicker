@@ -5,8 +5,8 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mertrizakaradeniz.bitcointicker.data.remote.CoinApi
-import com.mertrizakaradeniz.bitcointicker.util.Constant.BASE_URL
-import com.mertrizakaradeniz.bitcointicker.util.Constant.DATE_TIME
+import com.mertrizakaradeniz.bitcointicker.utils.Constant.BASE_URL
+import com.mertrizakaradeniz.bitcointicker.utils.Constant.DATE_TIME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -63,5 +63,7 @@ object AppModule {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
     }
+
+
 
 }

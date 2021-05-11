@@ -1,4 +1,4 @@
-package com.mertrizakaradeniz.bitcointicker.util
+package com.mertrizakaradeniz.bitcointicker.utils
 
 object Constant {
 

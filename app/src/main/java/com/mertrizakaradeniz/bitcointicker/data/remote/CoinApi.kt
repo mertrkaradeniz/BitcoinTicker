@@ -1,7 +1,7 @@
 package com.mertrizakaradeniz.bitcointicker.data.remote
 
-import com.mertrizakaradeniz.bitcointicker.model.coin.Coin
-import com.mertrizakaradeniz.bitcointicker.model.coin.CoinDetail
+import com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin
+import com.mertrizakaradeniz.bitcointicker.data.models.coin.CoinDetail
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

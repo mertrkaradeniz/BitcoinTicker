@@ -1,17 +1,15 @@
-package com.mertrizakaradeniz.bitcointicker.data.local.dao
+package com.mertrizakaradeniz.bitcointicker.data.local
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.mertrizakaradeniz.bitcointicker.model.coin.Coin
-import com.mertrizakaradeniz.bitcointicker.model.coin.FavouriteCoin
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
+import com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin
+import com.mertrizakaradeniz.bitcointicker.data.models.coin.FavouriteCoin
 
 @Dao
 interface CoinDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    /*@Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertCoin(coinList: List<Coin>)
 
     @Query("SELECT * FROM Coin")
@@ -36,9 +34,9 @@ interface CoinDao {
     suspend fun getFavouriteCoins(userId: String): List<FavouriteCoin>
 
     @Query("SELECT * FROM FavouriteCoin WHERE userId=:userId")
-    fun getFavouriteCoinsLiveData(userId: String): LiveData<List<FavouriteCoin>>
+    fun getCoinsLiveData(userId: String): LiveData<List<FavouriteCoin>>
 
     @Query("DELETE FROM FavouriteCoin WHERE id=:coinId AND userId=:userId")
-    suspend fun deleteFavouriteCoin(coinId: String, userId: String)
+    suspend fun deleteFavouriteCoin(coinId: String, userId: String)*/
 
 }

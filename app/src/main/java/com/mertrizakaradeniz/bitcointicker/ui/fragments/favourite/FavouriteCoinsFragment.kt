@@ -1,4 +1,4 @@
-package com.mertrizakaradeniz.bitcointicker.ui
+package com.mertrizakaradeniz.bitcointicker.ui.fragments.favourite
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

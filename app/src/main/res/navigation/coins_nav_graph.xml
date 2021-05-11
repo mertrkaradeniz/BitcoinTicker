@@ -7,16 +7,16 @@
 
     <fragment
         android:id="@+id/coinsFragment"
-        android:name="com.mertrizakaradeniz.bitcointicker.ui.CoinsFragment"
+        android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.list.CoinListFragment"
         android:label="fragment_coins"
-        tools:layout="@layout/fragment_coins" >
+        tools:layout="@layout/fragment_coin_list" >
         <action
             android:id="@+id/action_coinsFragment_to_coinDetailFragment"
             app:destination="@id/coinDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/favouriteCoinsFragment"
-        android:name="com.mertrizakaradeniz.bitcointicker.ui.FavouriteCoinsFragment"
+        android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.favourite.FavouriteCoinsFragment"
         android:label="fragment_favourite_coins"
         tools:layout="@layout/fragment_favourite_coins" >
         <action
@@ -25,12 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/coinDetailFragment"
-        android:name="com.mertrizakaradeniz.bitcointicker.ui.CoinDetailFragment"
+        android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.detail.CoinDetailFragment"
         android:label="fragment_coin_detail"
         tools:layout="@layout/fragment_coin_detail" />
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.mertrizakaradeniz.bitcointicker.ui.SearchFragment"
-        android:label="fragment_search"
-        tools:layout="@layout/fragment_search" />
 </navigation>
