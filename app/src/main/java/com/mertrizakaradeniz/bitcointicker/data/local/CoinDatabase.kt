@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin
 import com.mertrizakaradeniz.bitcointicker.data.models.coin.FavouriteCoin
 
-@Database(entities = [Coin::class], version = 1, exportSchema = false)
+@Database(entities = [Coin::class, FavouriteCoin::class], version = 1, exportSchema = false)
 abstract class CoinDatabase : RoomDatabase() {
     abstract fun coinDao(): CoinDao
 }

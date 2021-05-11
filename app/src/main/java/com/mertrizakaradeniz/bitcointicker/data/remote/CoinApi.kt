@@ -22,4 +22,7 @@ interface CoinApi {
         @Query("developer_data") developerData: Boolean = false,
         @Query("sparkline") sparkLine: Boolean = false
     ): Response<CoinDetail>
+
+    /*@GET("coins/{id}")
+    suspend fun getCoinDetail(@Path("id") id: String): Response<CoinDetail>*/
 }

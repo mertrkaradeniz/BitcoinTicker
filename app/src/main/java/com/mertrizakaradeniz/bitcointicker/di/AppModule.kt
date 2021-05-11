@@ -1,15 +1,25 @@
 package com.mertrizakaradeniz.bitcointicker.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Environment
+import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.mertrizakaradeniz.bitcointicker.data.local.CoinDao
+import com.mertrizakaradeniz.bitcointicker.data.local.CoinDatabase
 import com.mertrizakaradeniz.bitcointicker.data.remote.CoinApi
+import com.mertrizakaradeniz.bitcointicker.data.repository.CoinRepository
+import com.mertrizakaradeniz.bitcointicker.data.repository.FirebaseAuthRepository
 import com.mertrizakaradeniz.bitcointicker.utils.Constant.BASE_URL
 import com.mertrizakaradeniz.bitcointicker.utils.Constant.DATE_TIME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -23,6 +33,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    //NETWORK
     @Singleton
     @Provides
     fun provideGson(): Gson {
@@ -64,6 +75,48 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
     }
 
+    //DATABASE
+    @Singleton
+    @Provides
+    fun provideCoinDatabase(@ApplicationContext context: Context): CoinDatabase {
+        return Room.databaseBuilder(
+            context,
+            CoinDatabase::class.java,
+            "CoinDatabase"
+        ).build()
+    }
 
+    @Singleton
+    @Provides
+    fun provideCoinDao(coinDatabase: CoinDatabase) = coinDatabase.coinDao()
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context) =
+        context.getSharedPreferences("CommonSharedPreferences", Context.MODE_PRIVATE)
+
+
+    //FIREBASE
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth() = FirebaseAuth.getInstance()
+
+    @Singleton
+    @Provides
+    fun provideFirebaseFireStore() = FirebaseFirestore.getInstance()
+
+    //REPOSITORY
+    @Singleton
+    @Provides
+    fun provideCoinRepository(
+        coinApi: CoinApi,
+        coinDao: CoinDao,
+        firebaseAuthRepository: FirebaseAuthRepository
+    ): CoinRepository = CoinRepository(coinApi, coinDao, firebaseAuthRepository)
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAuthRepository(firebaseAuth: FirebaseAuth) =
+        FirebaseAuthRepository(firebaseAuth)
 
 }
