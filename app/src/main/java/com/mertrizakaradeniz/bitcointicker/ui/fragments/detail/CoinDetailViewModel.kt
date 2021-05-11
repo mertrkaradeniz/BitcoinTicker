@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.SetOptions
+import com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin
 import com.mertrizakaradeniz.bitcointicker.data.models.coin.CoinDetail
 import com.mertrizakaradeniz.bitcointicker.data.repository.CoinRepository
 import com.mertrizakaradeniz.bitcointicker.data.repository.FirebaseAuthRepository
@@ -23,35 +25,66 @@ class CoinDetailViewModel @Inject constructor(
     private val coinRepository: CoinRepository,
     private val firestoreRepository: FirestoreRepository,
     private val firebaseAuthRepository: FirebaseAuthRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _coinDetail: MutableLiveData<Resource<CoinDetail>> = MutableLiveData()
     val coinDetail: LiveData<Resource<CoinDetail>> = _coinDetail
 
-    private val _favouriteCoinList: MutableLiveData<Resource<CoinDetail>> = MutableLiveData()
-    val favouriteCoinList: LiveData<Resource<CoinDetail>> = _coinDetail
+    private val _addFavouriteCoin: MutableLiveData<Resource<String>> = MutableLiveData()
+    val addFavouriteCoin: LiveData<Resource<String>> = _addFavouriteCoin
+
+    private val _deleteFavouriteCoin: MutableLiveData<Resource<String>> = MutableLiveData()
+    val deleteFavouriteCoin: LiveData<Resource<String>> = _deleteFavouriteCoin
+
+    private val _isFavourite = MutableLiveData<Boolean>()
+    val isFavourite: LiveData<Boolean> = _isFavourite
 
     fun fetchCoinDetail(context: Context, id: String) = viewModelScope.launch {
         safeFetchCoinDetailCall(context, id)
     }
 
-    fun saveFavoriteCoin(coin: HashMap<String, String>, onResult: (Resource<Task<Void>>) -> Unit) = viewModelScope.launch {
-        onResult(Resource.Loading())
+    fun saveFavouriteCoin(coin: HashMap<String, String>) = viewModelScope.launch {
+        safeSaveFavouriteCoinCall(coin)
+    }
+
+    fun deleteFavouriteCoin(coin: HashMap<String, String>) = viewModelScope.launch {
+        safeDeleteFavouriteCoinCall(coin)
+    }
+
+    private suspend fun safeDeleteFavouriteCoinCall(coin: HashMap<String, String>) {
+        _deleteFavouriteCoin.postValue(Resource.Loading())
+        try {
+            val collectionReference = firestoreRepository.favoriteCoinsCollection()
+            collectionReference.document(coin["id"]!!)
+                .delete()
+                .addOnSuccessListener {
+                    _deleteFavouriteCoin.postValue(Resource.Success("Coin deleted from favorite"))
+                }
+                .addOnFailureListener {
+                    _deleteFavouriteCoin.postValue(Resource.Error("An error occurred: ${it.message}"))
+                }
+        } catch (t: Throwable) {
+            _deleteFavouriteCoin.postValue(Resource.Error("An error occurred: ${t.message}"))
+        }
+    }
+
+    private suspend fun safeSaveFavouriteCoinCall(coin: HashMap<String, String>) {
+        _addFavouriteCoin.postValue(Resource.Loading())
         try {
             val collectionReference = firestoreRepository.favoriteCoinsCollection()
             collectionReference.document(coin["id"]!!)
                 .set(coin)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onResult(Resource.Success(task))
-                    } else {
-                        onResult(Resource.Error(task.exception?.localizedMessage ?: "Unexpected error while adding to favourites."))
-                    }
+                .addOnSuccessListener {
+                    _addFavouriteCoin.postValue(Resource.Success("Coin added to favorite"))
+                }
+                .addOnFailureListener {
+                    _addFavouriteCoin.postValue(Resource.Error("An error occurred: ${it.message}"))
                 }
         } catch (t: Throwable) {
-            onResult(Resource.Error("An error occurred: ${t.message}"))
+            _addFavouriteCoin.postValue(Resource.Error("An error occurred: ${t.message}"))
         }
     }
+
 
     private suspend fun safeFetchCoinDetailCall(context: Context, id: String) {
         _coinDetail.postValue(Resource.Loading())
@@ -85,5 +118,9 @@ class CoinDetailViewModel @Inject constructor(
         return Resource.Error("An error occurred, please try again")
     }
 
-
+    private fun checkIsFavourite(coinId: String, userId: String) = viewModelScope.launch {
+        coinRepository.getFavouriteCoin(coinId, userId).also { favouriteCoin ->
+            _isFavourite.postValue(favouriteCoin != null)
+        }
+    }
 }

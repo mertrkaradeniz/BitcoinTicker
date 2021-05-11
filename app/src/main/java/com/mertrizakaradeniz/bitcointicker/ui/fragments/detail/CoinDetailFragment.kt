@@ -6,9 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import coil.load
 import com.mertrizakaradeniz.bitcointicker.R
 import com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin
@@ -24,10 +24,10 @@ class CoinDetailFragment : Fragment(R.layout.fragment_coin_detail) {
     private var _binding: FragmentCoinDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CoinDetailViewModel by viewModels<CoinDetailViewModel>()
-    //private val args: CoinDetailFragmentArgs by navArgs()
+    private val viewModel: CoinDetailViewModel by viewModels()
 
     private lateinit var coin: Coin
+    private var isFavourite: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,10 +40,10 @@ class CoinDetailFragment : Fragment(R.layout.fragment_coin_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         coin = arguments?.get("coin") as Coin
+        isFavourite = arguments?.get("isFavourite") as Boolean
         setupObservers()
         //setupIntervalChange()
-        //setupAddFavorite()
-
+        checkFavourite()
         viewModel.fetchCoinDetail(requireContext(), coin.id)
     }
 
@@ -74,7 +74,76 @@ class CoinDetailFragment : Fragment(R.layout.fragment_coin_detail) {
             }
         }
 
+        viewModel.addFavouriteCoin.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is Resource.Success -> {
+                    (requireActivity() as MainActivity).hideProgressBar()
+                    Toast.makeText(requireContext(), response.data, Toast.LENGTH_SHORT).show()
+                }
+                is Resource.Error -> {
+                    (requireActivity() as MainActivity).hideProgressBar()
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(response.message)
+                        .setPositiveButton("Try Again") { dialog, _ ->
+                            dialog.dismiss()
+                            addFavouriteCoin()
+                        }.show()
+                }
+                is Resource.Loading -> {
+                    (requireActivity() as MainActivity).showProgressBar()
+                }
+            }
+        })
 
+        viewModel.deleteFavouriteCoin.observe(viewLifecycleOwner, { response ->
+            when (response) {
+                is Resource.Success -> {
+                    (requireActivity() as MainActivity).hideProgressBar()
+                    Toast.makeText(requireContext(), response.data, Toast.LENGTH_SHORT).show()
+                }
+                is Resource.Error -> {
+                    (requireActivity() as MainActivity).hideProgressBar()
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(response.message)
+                        .setPositiveButton("Try Again") { dialog, _ ->
+                            dialog.dismiss()
+                            deleteFavouriteCoin()
+                        }.show()
+                }
+                is Resource.Loading -> {
+                    (requireActivity() as MainActivity).showProgressBar()
+                }
+            }
+        })
+    }
+
+    private fun checkFavourite() {
+        binding.fabAddFovourite.setOnClickListener {
+            if (isFavourite) {
+                deleteFavouriteCoin()
+            } else {
+                addFavouriteCoin()
+            }
+        }
+    }
+
+    private fun addFavouriteCoin() {
+        val coin = hashMapOf(
+            "id" to coin.id,
+            "name" to coin.name,
+            "symbol" to coin.symbol
+        )
+        viewModel.saveFavouriteCoin(coin)
+    }
+
+    private fun deleteFavouriteCoin() {
+        val coin = hashMapOf(
+            "id" to coin.id,
+            "name" to coin.name,
+            "symbol" to coin.symbol
+        )
+
+        viewModel.deleteFavouriteCoin(coin)
     }
 
     private fun setCoinDetail(coinDetailResponse: CoinDetail) {

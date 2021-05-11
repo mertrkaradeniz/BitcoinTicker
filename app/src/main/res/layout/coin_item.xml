@@ -11,17 +11,21 @@
         android:id="@+id/tvCoinSymbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="8dp"
         android:text="Symbol"
-        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="24sp"
         />
 
     <TextView
         android:id="@+id/tvCoinName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textSize="20sp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center"
+        android:textSize="16sp"
         tools:text="Name" />
 
 </LinearLayout>

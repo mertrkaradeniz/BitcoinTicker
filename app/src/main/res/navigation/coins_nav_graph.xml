@@ -32,7 +32,7 @@
             android:name="Coin"
             app:argType="com.mertrizakaradeniz.bitcointicker.data.models.coin.Coin" />
         <argument
-            android:name="fromFavoriteCoinsFragment"
+            android:name="isFavourite"
             app:argType="boolean" />
     </fragment>
 </navigation>
