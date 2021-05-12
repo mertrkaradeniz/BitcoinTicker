@@ -6,13 +6,16 @@
     app:startDestination="@id/signInFragment">
 
     <fragment
-        android:id="@+id/coinsFragment"
+        android:id="@+id/coinListFragment"
         android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.list.CoinListFragment"
         android:label="Coins"
         tools:layout="@layout/fragment_coin_list" >
         <action
             android:id="@+id/action_coinsFragment_to_coinDetailFragment"
             app:destination="@id/coinDetailFragment" />
+        <action
+            android:id="@+id/action_coinListFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/favouriteCoinsFragment"
@@ -39,5 +42,16 @@
         android:id="@+id/signInFragment"
         android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.signin.SignInFragment"
         android:label="Bitcoin Ticker"
-        tools:layout="@layout/fragment_sign_in" />
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_coinsFragment"
+            app:destination="@id/coinListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.signup.SignUpFragment"
+        android:label="Bitcoin Ticker" />
 </navigation>

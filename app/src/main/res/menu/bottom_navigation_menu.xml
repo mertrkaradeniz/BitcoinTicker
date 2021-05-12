@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/coinsFragment"
+        android:id="@+id/coinListFragment"
         android:icon="@drawable/ic_coin"
         android:title="Coins" />
 

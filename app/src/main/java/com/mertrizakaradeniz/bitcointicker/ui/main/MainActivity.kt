@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.coinsFragment,
+                R.id.coinListFragment,
                 R.id.coinDetailFragment,
                 R.id.favouriteCoinsFragment
             )

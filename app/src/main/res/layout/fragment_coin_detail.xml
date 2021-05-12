@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clRoot"
-    android:visibility="gone"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray_light"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:visibility="gone"
+    tools:visibility="visible">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/coinHeader"
@@ -23,47 +24,40 @@
             android:id="@+id/imgCoinImage"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_margin="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="8dp"
             android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintBottom_toBottomOf="@+id/coinHeader"
             app:layout_constraintStart_toStartOf="@+id/coinHeader"
-            app:layout_constraintTop_toTopOf="@+id/coinHeader" />
+            app:layout_constraintTop_toBottomOf="@+id/tvCoinName" />
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/tvCoinName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="BITCOIN"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="@+id/coinHeader"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvCoinName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="BITCOIN"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="@+id/coinHeader"
-                app:layout_constraintStart_toEndOf="@+id/imgCoinImage"
-                app:layout_constraintTop_toTopOf="@+id/imgCoinImage" />
-
-            <TextView
-                android:id="@+id/tvCoinSymbol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="BTC"
-                android:textColor="@color/gray_light"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imgCoinImage"
-                app:layout_constraintEnd_toEndOf="@+id/coinHeader"
-                app:layout_constraintStart_toEndOf="@+id/imgCoinImage" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvCoinSymbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="BTC"
+            android:textColor="@color/gray_light"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgCoinImage"
+            app:layout_constraintEnd_toEndOf="@+id/tvCoinName"
+            app:layout_constraintStart_toStartOf="@+id/tvCoinName"
+            app:layout_constraintTop_toTopOf="@+id/imgCoinImage" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAddFovourite"
@@ -73,9 +67,9 @@
             android:backgroundTint="@color/white"
             android:clickable="true"
             android:src="@drawable/ic_favorite"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/imgCoinImage"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/imgCoinImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

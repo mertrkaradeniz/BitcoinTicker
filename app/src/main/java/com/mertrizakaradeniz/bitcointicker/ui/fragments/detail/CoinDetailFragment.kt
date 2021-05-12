@@ -148,7 +148,7 @@ class CoinDetailFragment : Fragment(R.layout.fragment_coin_detail) {
 
     private fun setCoinDetail(coinDetailResponse: CoinDetail) {
         binding.apply {
-            imgCoinImage.load(coinDetailResponse.image.small) {
+            imgCoinImage.load(coinDetailResponse.image.large) {
                 crossfade(true)
             }
             tvCoinName.text = coinDetailResponse.name
