@@ -27,7 +27,7 @@ interface CoinDao {
     suspend fun insertFavouriteCoin(favouriteCoin: FavouriteCoin)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavouriteCoins(list: List<FavouriteCoin>)
+    suspend fun insertFavouriteCoins(list: List<Coin>)
 
     @Query("SELECT * FROM FavouriteCoin WHERE id=:coinId AND userId=:userId")
     suspend fun getFavouriteCoin(coinId: String, userId: String): FavouriteCoin?

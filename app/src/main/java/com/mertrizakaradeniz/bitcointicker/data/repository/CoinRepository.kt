@@ -33,11 +33,11 @@ class CoinRepository @Inject constructor(
     suspend fun insertFavouriteCoin(favouriteCoin: FavouriteCoin) =
         coinDao.insertFavouriteCoin(favouriteCoin)
 
-    suspend fun insertFavouriteCoins(list: List<FavouriteCoin>) = coinDao.insertFavouriteCoins(list)
+    suspend fun insertFavouriteCoins(list: List<Coin>) = coinDao.insertFavouriteCoins(list)
 
     suspend fun getFavouriteCoin(coinId: String, userId: String) = coinDao.getFavouriteCoin(coinId, userId)
 
-    suspend fun getFavouriteCoins(userId: String) = coinDao.getFavouriteCoins(userId)
+    suspend fun getFavouriteCoinList(userId: String) = coinDao.getFavouriteCoins(userId)
 
     suspend fun deleteFavouriteCoin(coinId: String, userId: String) = coinDao.deleteFavouriteCoin(coinId, userId)
 
