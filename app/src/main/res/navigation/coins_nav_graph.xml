@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/coinsFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/coinsFragment"
@@ -35,4 +35,9 @@
             android:name="isFavourite"
             app:argType="boolean" />
     </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.mertrizakaradeniz.bitcointicker.ui.fragments.signin.SignInFragment"
+        android:label="Bitcoin Ticker"
+        tools:layout="@layout/fragment_sign_in" />
 </navigation>
