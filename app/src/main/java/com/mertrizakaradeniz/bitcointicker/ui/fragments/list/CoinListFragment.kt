@@ -39,6 +39,7 @@ class CoinListFragment : Fragment(R.layout.fragment_coin_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).showBottomNavigation()
         setupObservers()
         setupRecyclerView()
         setupSearchView()

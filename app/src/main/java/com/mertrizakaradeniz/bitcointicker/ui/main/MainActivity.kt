@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupNavigation()
-        handleDisplayHomeAsUp()
     }
 
     override fun onNavigateUp(): Boolean {
@@ -39,18 +38,13 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.coinListFragment,
-                R.id.coinDetailFragment,
-                R.id.favouriteCoinsFragment
+                R.id.favouriteCoinsFragment,
+                R.id.signUpFragment,
+                R.id.signInFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigationView.setupWithNavController(navController)
-    }
-
-    private fun handleDisplayHomeAsUp() {
-        navController.addOnDestinationChangedListener { controller, _, _ ->
-            supportActionBar?.setDisplayHomeAsUpEnabled(controller.previousBackStackEntry != null)
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -63,6 +57,14 @@ class MainActivity : AppCompatActivity() {
 
     fun showProgressBar() {
         binding.pbCoinList.visibility = View.VISIBLE
+    }
+
+    fun hideBottomNavigation() {
+        binding.bottomNavigationView.visibility = View.GONE
+    }
+
+    fun showBottomNavigation() {
+        binding.bottomNavigationView.visibility = View.VISIBLE
     }
 
 }
