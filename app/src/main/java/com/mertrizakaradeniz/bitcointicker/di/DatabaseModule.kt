@@ -33,5 +33,4 @@ object DatabaseModule {
     @Provides
     fun provideSharedPreferences(@ApplicationContext context: Context) =
         context.getSharedPreferences("CommonSharedPreferences", Context.MODE_PRIVATE)
-
 }

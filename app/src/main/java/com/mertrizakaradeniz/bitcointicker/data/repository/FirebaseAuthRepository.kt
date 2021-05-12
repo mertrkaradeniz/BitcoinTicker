@@ -23,17 +23,6 @@ class FirebaseAuthRepository @Inject constructor(
         }
     }
 
-    fun sendEmailVerification(onResult: (Resource<Task<Void>>) -> Unit) {
-        onResult(Resource.Loading())
-        firebaseAuth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                onResult(Resource.Success(task))
-            } else {
-                onResult(Resource.Error(task.exception?.localizedMessage ?: ""))
-            }
-        }
-    }
-
     fun signIn(email: String, password: String, onResult: (Resource<Task<AuthResult>>) -> Unit) {
         onResult(Resource.Loading())
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
